@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 hosts = [
-  { name: 'graphs', ipaddr: '10.2.2.2', memory: '512' }
+  { name: 'graphs', memory: '512' }
 ]
 
 Vagrant.configure("2") do |config|
@@ -10,7 +10,6 @@ Vagrant.configure("2") do |config|
     config.vm.define host[:name] do |c|
       c.vm.box = "ubuntu/trusty64"
       c.vm.hostname = host[:name]
-      c.vm.network :private_network, ip: host[:ipaddr], netmask: '255.255.255.0'
       c.vm.provider :virtualbox do |vb|
         modifyvm_args = ['modifyvm', :id]
         modifyvm_args << "--memory" << host[:memory]
