@@ -20,6 +20,7 @@ Vagrant.configure("2") do |config|
         vb.customize(modifyvm_args)
       end
       c.vm.provision :shell, :path => "bootstrap.sh"
+      c.vm.synced_folder ".", "/home/vagrant/lazer-graphs"
     end
   end
 end
