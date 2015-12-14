@@ -26,9 +26,13 @@ except serial.serialutil.SerialException as e:
 while True:
     ser.write("?C1;")
 
+    line = ""
     while True:
         ch = ser.read(1)
         if ch == '\n':
             break
 
+        line += ch
+
+    print line
     sleep(1)
