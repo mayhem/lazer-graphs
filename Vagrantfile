@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
     config.vm.define host[:name] do |c|
       c.vm.box = "ubuntu/trusty64"
       c.vm.hostname = host[:name]
+      c.vm.network "forwarded_port", guest: 8000, host: 8000
       c.vm.provider :virtualbox do |vb|
         modifyvm_args = ['modifyvm', :id]
         modifyvm_args << "--memory" << host[:memory]

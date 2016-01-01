@@ -1,0 +1,21 @@
+<html>
+   <head>Lazers!</head>
+<body>
+<html>
+Here be messages:
+<div id="messages">
+</div>
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/commands');
+    socket.on('status', function(msg) {
+        $('#messages').append('<p>' + msg.data + '</p>');
+    });
+    $('form#emit').submit(function(event) {
+        socket.emit('set-power', {data: $('#emit_data').val()});
+        return false;
+    });
+});
+</script>
+</html>
