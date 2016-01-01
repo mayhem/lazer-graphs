@@ -1,21 +1,68 @@
-<html>
-   <head>Lazers!</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <title>Lazers!</title>
+   <link rel="stylesheet" type="text/css" href="static/js/bootstrap-3.3.6.min.css">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
-<html>
-Here be messages:
-<div id="messages">
+<div class="container-fluid">
+
+  <div class="row">
+
+      <div class="col-md-4">
+
+        <table class="table table-striped table-bordered">
+          <tr>
+             <th colspan="2">Current laser status</th>
+          </tr>
+          <tr>
+             <td>Current</td>
+             <td id="current"></td>
+          </tr>
+          <tr>
+             <td>Power</td>
+             <td id="power"></td>
+          </tr>
+          <tr>
+             <td>Temperature</td>
+             <td id="temp"></td>
+          </tr>
+        </table>
+
+      </div>
+
+      <div class="col-md-8">
+          Graphs here.
+      </div>
+
+  </div>
+
 </div>
 </body>
+<script src="/static/js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/commands');
-    socket.on('status', function(msg) {
-        $('#messages').append('<p>' + msg.data + '</p>');
-    });
-    $('form#emit').submit(function(event) {
-        socket.emit('set-power', {data: $('#emit_data').val()});
-        return false;
-    });
+
+var poll_timeout = 1000;
+
+setTimeout(poll, poll_timeout);
+function poll()
+{
+    var xhr = $.getJSON("/api/data", function(data)
+        {
+            $("#current").html(data.current + " A");
+            $("#power").html(data.power + " W");
+            $("#temp").html(data.temp + " C");
+        }
+    ).fail(function()
+        {
+            console.log("polling failed");
+        }
+    );
+    setTimeout(poll, poll_timeout);
+}
+
 });
 </script>
 </html>

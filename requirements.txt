@@ -1,4 +1,2 @@
 pyserial
 flask
-flask-socketio
-gevent
