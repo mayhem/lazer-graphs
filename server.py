@@ -4,7 +4,7 @@ import os
 import threading
 import atexit
 import copy
-from random import randrange
+from random import random
 from flask import Flask, render_template, request, jsonify
 
 HOST = "0.0.0.0"
@@ -18,23 +18,27 @@ poll_thread = None
 def read_data():
     return read_data_faux()
 
-TEMP_RANGE = 5.0
-POWER_RANGE = 2.0
-CURRENT_RANGE = 4.0
+TEMP_RANGE = .1
+POWER_RANGE = .3
+CURRENT_RANGE = .2
 
 def read_data_faux():
 
     data = copy.copy(current_data)
     if not 'temp' in data:
-        data['temp'] = 20.0
+        data['temp'] = 30.0
     if not 'power' in data:
         data['power'] = 5.0 
     if not 'current' in data:
         data['current'] = 2.0
 
-    data['temp'] += max(0, randrange(-TEMP_RANGE, TEMP_RANGE))
-    data['current'] += max(0, randrange(-CURRENT_RANGE, CURRENT_RANGE))
-    data['power'] += max(0, randrange(-POWER_RANGE, POWER_RANGE))
+    data['temp'] += random() * TEMP_RANGE - (TEMP_RANGE / 2.0)
+    data['current'] += random() * CURRENT_RANGE - (CURRENT_RANGE * 2.0)
+    data['power'] += random() * POWER_RANGE - (POWER_RANGE / 2.0)
+
+    data['temp'] = max(0, data['temp'])
+    data['current'] = max(0, data['current'])
+    data['power'] = max(0, data['power'])
 
     return data
 

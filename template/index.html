@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
    <title>Lazers!</title>
-   <link rel="stylesheet" type="text/css" href="static/js/bootstrap-3.3.6.min.css">
+   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-3.3.6.min.css"/>
+   <link rel="stylesheet" type="text/css" href="/static/css/graph.css"/>
    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
@@ -33,7 +34,9 @@
       </div>
 
       <div class="col-md-8">
-          Graphs here.
+        <div id="curr-graph"></div>
+        <div id="power-graph"></div>
+        <div id="temp-graph"></div>
       </div>
 
   </div>
@@ -41,10 +44,37 @@
 </div>
 </body>
 <script src="/static/js/jquery-2.1.4.min.js"></script>
+<script src="/static/js/d3-3.5.12.min.js"></script>
+<script src="/static/js/d3-3.5.12.layout.min.js"></script>
+<script src="/static/js/rickshaw.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 
 var poll_timeout = 1000;
+var curr_data = [];
+var index = 0;
+var WINDOW_SIZE = 60;
+
+var curr_graph = new Rickshaw.Graph( {
+    element: document.querySelector("#curr-graph"), 
+    width: $("#curr-graph").innerWidth(), 
+    height: $("#curr-graph").innerHeight(), 
+    series: [{
+        color: 'steelblue',
+        data: curr_data, 
+    }]
+});
+Rickshaw.Series.zeroFill(curr_graph.series)
+var x_axis = new Rickshaw.Graph.Axis.Time({ graph: curr_graph });
+var y_axis = new Rickshaw.Graph.Axis.Y({ graph: curr_graph, max : 3.0, min : 1.0 });
+curr_graph.render();
+x_axis.render();
+y_axis.render();
+//var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+//     graph: curr_graph,
+//     yFormatter: function(y) { return y + " A" }
+//} );
+//hoverDetail.render();
 
 setTimeout(poll, poll_timeout);
 function poll()
@@ -54,6 +84,14 @@ function poll()
             $("#current").html(data.current + " A");
             $("#power").html(data.power + " W");
             $("#temp").html(data.temp + " C");
+
+            curr_data.push({ 'x' : index, 'y' : data.current });
+            if (curr_data.length > WINDOW_SIZE)
+                curr_data.shift();
+
+            curr_graph.update();
+
+            index++;
         }
     ).fail(function()
         {
