@@ -18,9 +18,9 @@ poll_thread = None
 def read_data():
     return read_data_faux()
 
-TEMP_RANGE = .1
-POWER_RANGE = .3
-CURRENT_RANGE = .2
+TEMP_RANGE = 5
+POWER_RANGE = 10
+CURRENT_RANGE = 20
 
 def read_data_faux():
 
@@ -30,10 +30,10 @@ def read_data_faux():
     if not 'power' in data:
         data['power'] = 5.0 
     if not 'current' in data:
-        data['current'] = 2.0
+        data['current'] = 5.0
 
     data['temp'] += random() * TEMP_RANGE - (TEMP_RANGE / 2.0)
-    data['current'] += random() * CURRENT_RANGE - (CURRENT_RANGE * 2.0)
+    data['current'] += random() * CURRENT_RANGE - (CURRENT_RANGE / 2.0)
     data['power'] += random() * POWER_RANGE - (POWER_RANGE / 2.0)
 
     data['temp'] = max(0, data['temp'])
